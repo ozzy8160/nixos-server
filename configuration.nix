@@ -66,17 +66,20 @@
     intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
   };
   # enable opengl
-  hardware.opengl = {
+  hardware.graphics = {
       # Opengl
       enable = true;
       extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
       intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiVdpau
+      intel-compute-runtime
+      intel-media-sdk
       libvdpau-va-gl
       vpl-gpu-rt
     ];
   };
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+  #environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
   
   # startship
   programs.starship = {
@@ -140,6 +143,9 @@
     hyprlock
     hyprpolkitagent
     libsForQt5.kdenlive
+    jellyfin
+    jellyfin-web
+    jellyfin-ffmpeg
     kitty
     lsd
     waybar
@@ -147,6 +153,7 @@
     rclone
     rofi-wayland
     ripgrep
+    ncdu
     networkmanagerapplet
     sftpman
     sshfs
@@ -154,6 +161,7 @@
     starship
     swww
     sway
+    syncthing
     pavucontrol
     mpd
     mpv
@@ -179,7 +187,7 @@
       shellAliases = {
         b = "cd ..";
 #	ls = "lsd";
-	s = "ssh ryan@192.168.1.18";
+	s = "ssh ryan@192.168.1.58";
 	# Search command line history
 	h = "history | grep ";
 	#vim
@@ -204,6 +212,13 @@
    };
 
   # List services that you want to enable:
+  
+  #jellyfin
+  services.jellyfin = {
+  enable = true;
+  openFirewall = true;
+  user = "ryan";
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
