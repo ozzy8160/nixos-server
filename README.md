@@ -1,1 +1,1 @@
-# Nix-config
+/etc/nixos/README.md
