@@ -22,6 +22,15 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  
+  #increase download buffer
+  nix.settings.download-buffer-size = 524288000;
+
+  #garbage collection
+  nix.settings.auto-optimise-store = true;
+  nix.gc.automatic = true;
+  nix.gc.dates = "daily";
+  nix.gc.options = "--delete-older-than +5";
 
   #kernel version
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -31,7 +40,6 @@
   
   # enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
 
   # Enable networking and set host name
   networking.networkmanager.enable = true;
@@ -62,7 +70,7 @@
  };
 
 
-  nixpkgs.config.packageOverrides = pkgs: {
+    nixpkgs.config.packageOverrides = pkgs: {
     intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
   };
   # enable opengl
@@ -71,10 +79,10 @@
       enable = true;
       extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+       intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
       intel-compute-runtime
-      intel-media-sdk
+      #  intel-media-sdk
       libvdpau-va-gl
       vpl-gpu-rt
     ];
@@ -120,7 +128,7 @@
     extraGroups = [ "networkmanager" "wheel" ];
     openssh.authorizedKeys.keys = ["AAAAC3NzaC1lZDI1NTE5AAAAIL2hdyohgome0xN7k3IKGVxVvWtq1i8hKQ0QrqbWciHO"];
     packages = with pkgs; [
-      floorp
+      floorp-bin
     ];
   };
 
@@ -128,10 +136,9 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    brightnessctl
+  #brightnessctl
     btop
-    cmatrix
-    dunst
+  #dunst
     fastfetch
     fd
     fzf
@@ -142,7 +149,7 @@
     hyprcursor
     hyprlock
     hyprpolkitagent
-    libsForQt5.kdenlive
+    kdePackages.kdenlive
     jellyfin
     jellyfin-web
     jellyfin-ffmpeg
@@ -151,7 +158,7 @@
     waybar
     libnotify
     rclone
-    rofi-wayland
+    rofi
     ripgrep
     ncdu
     networkmanagerapplet
@@ -163,12 +170,9 @@
     sway
     syncthing
     pavucontrol
-    mpd
-    mpv
     pulseaudio
     pipewire
     wget
-    thefuck
     tldr
     timeshift
     xclip
@@ -187,7 +191,7 @@
       shellAliases = {
         b = "cd ..";
 #	ls = "lsd";
-	s = "ssh ryan@192.168.1.58";
+	sj = "ssh ryan@192.168.1.58";
 	# Search command line history
 	h = "history | grep ";
 	#vim
@@ -217,7 +221,6 @@
   services.jellyfin = {
   enable = true;
   openFirewall = true;
-  user = "ryan";
   };
 
   # Enable the OpenSSH daemon.
