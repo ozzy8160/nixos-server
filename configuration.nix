@@ -16,7 +16,19 @@
   fileSystems."/mnt/vault3" = {
     device = "/dev/disk/by-uuid/dc7a1bed-2d94-47af-8b92-7b3d184025e1";
     fsType = "btrfs";
-    options = [ "subvolid=257" "compress=zstd:1" "noatime" ];
+    options = [ "subvolid=257" "compress=zstd:5" "noatime" ];
+  };
+  
+  fileSystems."/mnt/backup_vault" = {
+    device = "/dev/disk/by-uuid/75524f49-56e1-44b9-85ac-d9adec0d0d9e";
+    fsType = "btrfs";
+    options = [ "subvolid=256" "compress=zstd:15" "noatime" ];
+  };
+  
+  fileSystems."/mnt/backup_vault2" = {
+    device = "/dev/disk/by-uuid/b4349dd9-a12c-487a-9f61-bf35fee23655";
+    fsType = "btrfs";
+    options = [ "subvolid=5" "compress=zstd:15" "noatime" ];
   };
 
   # Bootloader.
@@ -62,14 +74,6 @@
     LC_TIME = "en_US.UTF-8";
   };
   
-  #hyprland
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-    withUWSM = true;
- };
-
-
     nixpkgs.config.packageOverrides = pkgs: {
     intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
   };
@@ -79,15 +83,15 @@
       enable = true;
       extraPackages = with pkgs; [
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
-       intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      intel-vaapi-driver # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       vaapiVdpau
-      intel-compute-runtime
-      #  intel-media-sdk
+      #intel-compute-runtime
       libvdpau-va-gl
       vpl-gpu-rt
     ];
   };
-  #environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD";
+  }; # Force intel-media-driver
   
   # startship
   programs.starship = {
@@ -143,19 +147,14 @@
     fd
     fzf
     gcc
-    gparted
     git
-    grim
-    hyprcursor
-    hyprlock
-    hyprpolkitagent
     kdePackages.kdenlive
     jellyfin
     jellyfin-web
     jellyfin-ffmpeg
     kitty
     lsd
-    waybar
+    lazygit
     libnotify
     rclone
     rofi
@@ -164,17 +163,9 @@
     networkmanagerapplet
     sftpman
     sshfs
-    slurp
     starship
-    swww
-    sway
-    syncthing
-    pavucontrol
-    pulseaudio
-    pipewire
     wget
     tldr
-    timeshift
     xclip
     zip
     zoxide
@@ -253,7 +244,7 @@
 
   # Open ports in the firewall.
   networking.firewall = {
-    allowedTCPPorts = [ 21 22 ];
+    allowedTCPPorts = [ 21 22 8096 ];
     allowedTCPPortRanges = [ { from = 56250; to = 56250;} ];
 
     connectionTrackingModules = [ "ftp" ];
