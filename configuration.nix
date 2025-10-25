@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./terminal/fonts.nix
+      ./modules/services/vault3_snapshot.nix
 #      ./terminal/starship.nix
     ];
 
@@ -141,6 +142,7 @@
   environment.systemPackages = with pkgs; [
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #brightnessctl
+    bat
     btop
   #dunst
     fastfetch
