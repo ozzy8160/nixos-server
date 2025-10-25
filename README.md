@@ -1,1 +1,0 @@
-/etc/nixos/README.md
